@@ -2,3 +2,11 @@ ul {
   display: flex;
   justify-content: space-around;
 }
+section {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+article {
+  width: 300px;
+}

@@ -1,39 +1,41 @@
 import data from "./data.json";
+if (
+  window.location.pathname === "/" ||
+  window.location.pathname === "/index.html"
+) {
+  const { photographers } = data;
 
-const { photographers } = data;
+  const ul = document.querySelector("#tags");
+  const uniqueTags = [];
+  ul.innerHTML = "";
 
-const ul = document.querySelector("#tags");
-const uniqueTags = [];
-ul.innerHTML = "";
+  const createUniqueTags = () =>
+    photographers.forEach(({ tags }) =>
+      tags.forEach((tag) => {
+        if (!uniqueTags.includes(tag)) {
+          uniqueTags.push(tag);
+        }
+      })
+    );
 
-const createUniqueTags = () => {
-  photographers.forEach(({ tags }) => {
-    tags.forEach((tag) => {
-      if (!uniqueTags.includes(tag)) {
-        uniqueTags.push(tag);
-      }
-    });
-  });
-};
+  const displayTags = (tags) => {
+    tags.forEach((tag) => (ul.innerHTML += `<li>${tag}</li>`));
+  };
 
-const displayTags = (tags) => {
-  tags.forEach((tag) => (ul.innerHTML += `<li>${tag}</li>`));
-};
+  const dispPhotographers = (photographers, node) => {
+    let template = "";
+    photographers.forEach(({ name, price, city, country, tagline, tags }) => {
+      // je cherche la valeur de la prop name dans mon objet photographer
+      // et je créé une variable du même nom que la propriété cherchée
 
-const dispPhotographers = (photographers, node) => {
-  let template = "";
-  photographers.forEach(({ name, price, city, country, tagline, tags }) => {
-    // je cherche la valeur de la prop name dans mon objet photographer
-    // et je créé une variable du même nom que la propriété cherchée
+      //const { name, price, city, country, tagline, tags } = photographer;
 
-    //const { name, price, city, country, tagline, tags } = photographer;
+      // join : tableau ==> string
 
-    // join : tableau ==> string
+      let tagsArraySpan = tags.map((t) => `<span>${t}</span>`);
+      let tagsString = tagsArraySpan.join(" ");
 
-    let tagsArraySpan = tags.map((t) => `<span>${t}</span>`);
-    let tagsString = tagsArraySpan.join(" ");
-
-    template += `
+      template += `
     <article>
      <h2>${name}</h2>
      <p>${country}, ${city}</p>
@@ -42,34 +44,37 @@ const dispPhotographers = (photographers, node) => {
      <div>${tagsString}</div>
     </article>
     `;
-  });
-  node.innerHTML = template;
-};
-
-const filterPhotographerByTag = (photographers) => {
-  let filterededPhotographers = [];
-  document
-    .querySelector("ul")
-    .addEventListener("click", ({ target: { textContent: tag } }) => {
-      filterededPhotographers = photographers.filter(({ tags }) =>
-        tags.includes(tag)
-      );
-
-      if (filterededPhotographers.length) {
-        dispPhotographers(
-          filterededPhotographers,
-          document.querySelector("#photographers")
-        );
-      }
     });
-};
+    node.innerHTML = template;
+  };
 
-const main = () => {
-  createUniqueTags();
-  displayTags(uniqueTags);
-  dispPhotographers(photographers, document.querySelector("#photographers"));
+  const filterPhotographerByTag = (photographers) => {
+    let filterededPhotographers = [];
+    document
+      .querySelector("ul")
+      .addEventListener("click", ({ target: { textContent: tag } }) => {
+        filterededPhotographers = photographers.filter(({ tags }) =>
+          tags.includes(tag)
+        );
 
-  filterPhotographerByTag(photographers);
-};
+        if (filterededPhotographers.length) {
+          dispPhotographers(
+            filterededPhotographers,
+            document.querySelector("#photographers")
+          );
+        }
+      });
+  };
 
-main();
+  const main = () => {
+    createUniqueTags();
+    displayTags(uniqueTags);
+    dispPhotographers(photographers, document.querySelector("#photographers"));
+
+    filterPhotographerByTag(photographers);
+  };
+
+  main();
+} else {
+  alert("kikoo");
+}

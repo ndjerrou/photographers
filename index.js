@@ -1,55 +1,36 @@
 import data from "./data.json";
+// destructuring
 
+// 1 - creation of a variable named photographers ; 2 - photographers = value of the prop photographers inside my data object
 const { photographers } = data;
 
-const ul = document.querySelector("#tags");
-const uniqueTags = [];
-ul.innerHTML = "";
+//scope global
 
-const createUniqueTags = () => {
-  photographers.forEach(({ tags }) => {
-    tags.forEach((tag) => {
-      if (!uniqueTags.includes(tag)) {
-        uniqueTags.push(tag);
-      }
-    });
-  });
+const getUniqueTags = () => {
+  const tags = [];
+  // scope enfant
+  photographers.forEach((photographer) =>
+    photographer.tags.forEach((tag) => {
+      if (!tags.includes(tag)) tags.push(tag);
+    })
+  );
+  return tags;
 };
 
-const displayTags = (tags) => {
-  tags.forEach((tag) => (ul.innerHTML += `<li>${tag}</li>`));
+const dispTags = (tags, node) => {
+  let template = "";
+
+  tags.forEach((tag) => (template += `<li>#${tag}</li>`));
+
+  node.innerHTML = template;
 };
 
 const main = () => {
-  createUniqueTags();
-  displayTags(uniqueTags);
+  const uniqueTags = getUniqueTags();
+  const ul = document.querySelector("#tags");
+  console.log(ul);
+
+  dispTags(uniqueTags, ul);
 };
 
 main();
-// each value in JS can be either FALSY or TRUTHY
-
-// const user = {
-//   name: "Martial",
-//   login: "mleprevost",
-//   password: "guerre",
-//   age: 40
-// };
-
-// console.log(user);
-// console.log(typeof user);
-
-// // envoi vers serveur avec le format json
-
-// // objet --> string
-// const userJSON = JSON.stringify(user);
-
-// localStorage.setItem("user", userJSON);
-
-// // getting back my user
-
-// const Martial = localStorage.getItem("user");
-// console.log(Martial.name); // xx
-
-// // string --> objet
-// const martialJSON = JSON.parse(Martial);
-// console.log(martialJSON.name);
